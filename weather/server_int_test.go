@@ -2,6 +2,7 @@ package weather
 
 import (
 	"fmt"
+	"github.com/benschw/rest-go/config"
 	"github.com/benschw/rest-go/rando"
 	"github.com/benschw/weather-go/weather/api"
 	"github.com/benschw/weather-go/weather/client"
@@ -13,14 +14,18 @@ import (
 var _ = fmt.Print
 var _ = log.Print
 
-func ARandomIntServer() *Server {
+type Config struct {
+	Bind     string
+	Database string
+}
+
+func ARandomIntServer(dbStr string) *Server {
 	host := fmt.Sprintf("localhost:%d", rando.Port())
 
 	s := &Server{
-		Database: "root:@tcp(localhost:3306)/LocationTest?charset=utf8&parseTime=True",
+		Database: dbStr,
 		Bind:     host,
 	}
-	s.Migrate()
 	go s.Run()
 
 	return s
@@ -36,7 +41,10 @@ type IntTestSuite struct {
 var _ = Suite(&IntTestSuite{})
 
 func (s *IntTestSuite) SetUpSuite(c *C) {
-	s.s = ARandomIntServer()
+	var cfg Config
+	config.Bind("../test.yaml", &cfg)
+
+	s.s = ARandomIntServer(cfg.Database)
 	s.host = "http://" + s.s.Bind
 
 }

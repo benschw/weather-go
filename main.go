@@ -1,12 +1,10 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
+	"github.com/benschw/rest-go/config"
 	"github.com/benschw/weather-go/weather"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"log"
 	"os"
 )
@@ -14,22 +12,6 @@ import (
 type Config struct {
 	Bind     string
 	Database string
-}
-
-func LoadConfig(path string) (Config, error) {
-	config := Config{}
-
-	if _, err := os.Stat(path); err != nil {
-		return config, errors.New("config path not valid")
-	}
-
-	ymlData, err := ioutil.ReadFile(path)
-	if err != nil {
-		return config, err
-	}
-
-	err = yaml.Unmarshal([]byte(ymlData), &config)
-	return config, err
 }
 
 func main() {
@@ -46,8 +28,8 @@ func main() {
 	flag.Parse()
 
 	// Load Config
-	cfg, err := LoadConfig(cfgPath)
-	if err != nil {
+	var cfg Config
+	if err := config.Bind(cfgPath, &cfg); err != nil {
 		log.Fatal(err)
 	}
 
