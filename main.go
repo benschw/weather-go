@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/benschw/rest-go/config"
+	"github.com/benschw/opin-go/config"
 	"github.com/benschw/weather-go/weather"
 	"log"
 	"os"
@@ -41,7 +41,7 @@ func main() {
 	cmd := flag.Arg(0)
 
 	// Configure Server
-	s := &weather.Server{
+	s := &weather.WeatherService{
 		Database: cfg.Database,
 		Bind:     cfg.Bind,
 	}

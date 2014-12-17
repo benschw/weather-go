@@ -11,12 +11,12 @@ import (
 
 var _ = log.Printf
 
-type Server struct {
+type WeatherService struct {
 	Database string
 	Bind     string
 }
 
-func (s *Server) getDb() (gorm.DB, error) {
+func (s *WeatherService) getDb() (gorm.DB, error) {
 	db, err := gorm.Open("mysql", s.Database)
 	if err != nil {
 		return db, err
@@ -25,7 +25,7 @@ func (s *Server) getDb() (gorm.DB, error) {
 	return db, nil
 }
 
-func (s *Server) Migrate() error {
+func (s *WeatherService) Migrate() error {
 	db, err := s.getDb()
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func (s *Server) Migrate() error {
 	return nil
 }
 
-func (s *Server) Run() error {
+func (s *WeatherService) Run() error {
 	db, err := s.getDb()
 	if err != nil {
 		return err
@@ -50,10 +50,10 @@ func (s *Server) Run() error {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/location", resource.Add).Methods("POST")
-	r.HandleFunc("/location", resource.findAll).Methods("GET")
+	r.HandleFunc("/location", resource.FindAll).Methods("GET")
 	r.HandleFunc("/location/{id}", resource.Find).Methods("GET")
 	r.HandleFunc("/location/{id}", resource.Save).Methods("PUT")
-	r.HandleFunc("/location/{id}", resource.delete).Methods("DELETE")
+	r.HandleFunc("/location/{id}", resource.Delete).Methods("DELETE")
 
 	http.Handle("/", r)
 

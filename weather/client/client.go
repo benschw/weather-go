@@ -2,7 +2,7 @@ package client
 
 import (
 	"fmt"
-	"github.com/benschw/rest-go/rest"
+	"github.com/benschw/opin-go/rest"
 	"github.com/benschw/weather-go/weather/api"
 	"log"
 	"net/http"

@@ -2,7 +2,7 @@ package weather
 
 import (
 	"fmt"
-	"github.com/benschw/rest-go/rest"
+	"github.com/benschw/opin-go/rest"
 	"github.com/benschw/weather-go/weather/api"
 	"github.com/jinzhu/gorm"
 	"net/http"
@@ -35,7 +35,7 @@ func (r *LocationResource) Add(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (r *LocationResource) findAll(res http.ResponseWriter, req *http.Request) {
+func (r *LocationResource) FindAll(res http.ResponseWriter, req *http.Request) {
 	var locations []api.Location
 
 	r.Db.Find(&locations)
@@ -97,7 +97,7 @@ func (r *LocationResource) Save(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (r *LocationResource) delete(res http.ResponseWriter, req *http.Request) {
+func (r *LocationResource) Delete(res http.ResponseWriter, req *http.Request) {
 	id, err := rest.PathInt(req, "id")
 	if err != nil {
 		rest.SetBadRequestResponse(res)
