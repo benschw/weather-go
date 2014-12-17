@@ -19,7 +19,7 @@ type Config struct {
 	Database string
 }
 
-func ARandomIntService(dbStr string) *WeatherService {
+func ARandomService(dbStr string) *WeatherService {
 	host := fmt.Sprintf("localhost:%d", rando.Port())
 
 	s := &WeatherService{
@@ -44,7 +44,7 @@ func (s *IntTestSuite) SetUpSuite(c *C) {
 	var cfg Config
 	config.Bind("../test.yaml", &cfg)
 
-	s.s = ARandomIntService(cfg.Database)
+	s.s = ARandomService(cfg.Database)
 	s.host = "http://" + s.s.Bind
 
 }
