@@ -18,6 +18,7 @@ type IntTestSuite struct {
 var _ = Suite(&IntTestSuite{})
 
 func (s *IntTestSuite) TestFind(c *C) {
+
 	// when
 	cond, err := FindForLocation("Austin", "Texas")
 

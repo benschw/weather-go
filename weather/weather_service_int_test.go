@@ -30,29 +30,25 @@ func (s *IntTestSuite) TearDownTest(c *C) {
 	db.DropTable(api.Location{})
 }
 
-func (s *IntTestSuite) TestAddInt(c *C) {
-	// given
-	client := &client.LocationClient{Host: s.host}
+func (s *IntTestSuite) TestAdd(c *C) {
 
 	// when
-	created, err := client.AddLocation("Austin", "Texas", 78751)
+	created, err := client.AddLocation(s.host, "Austin", "Texas", 78751)
 
 	// then
 	c.Assert(err, Equals, nil)
-	found, err := client.FindLocation(created.Id)
+	found, err := client.FindLocation(s.host, created.Id)
 
 	c.Assert(created, DeepEquals, found)
 }
 
-func (s *IntTestSuite) TestFindAllInt(c *C) {
+func (s *IntTestSuite) TestFindAll(c *C) {
 	// given
-	client := &client.LocationClient{Host: s.host}
-
-	loc1, err := client.AddLocation("Austin", "Texas", 78751)
-	loc2, err := client.AddLocation("Williamsburg", "Virginia", 23188)
+	loc1, err := client.AddLocation(s.host, "Austin", "Texas", 78751)
+	loc2, err := client.AddLocation(s.host, "Williamsburg", "Virginia", 23188)
 	// when
 
-	foundLocations, err := client.FindAllLocations()
+	foundLocations, err := client.FindAllLocations(s.host)
 
 	// then
 	c.Assert(err, Equals, nil)
@@ -60,14 +56,13 @@ func (s *IntTestSuite) TestFindAllInt(c *C) {
 	c.Assert(foundLocations, DeepEquals, []api.Location{loc1, loc2})
 }
 
-func (s *IntTestSuite) TestSaveInt(c *C) {
+func (s *IntTestSuite) TestSave(c *C) {
 	// given
-	client := &client.LocationClient{Host: s.host}
-	location, err := client.AddLocation("Austin", "Texas", 78751)
+	location, err := client.AddLocation(s.host, "Austin", "Texas", 78751)
 
 	// when
 	location.State = "foo"
-	saved, err := client.SaveLocation(location)
+	saved, err := client.SaveLocation(s.host, location)
 
 	// then
 	c.Assert(err, Equals, nil)
@@ -75,18 +70,17 @@ func (s *IntTestSuite) TestSaveInt(c *C) {
 	c.Assert(location.State, DeepEquals, saved.State)
 }
 
-func (s *IntTestSuite) TestDeleteInt(c *C) {
+func (s *IntTestSuite) TestDelete(c *C) {
 	// given
-	client := &client.LocationClient{Host: s.host}
-	location, err := client.AddLocation("Austin", "Texas", 78751)
+	location, err := client.AddLocation(s.host, "Austin", "Texas", 78751)
 
 	// when
-	err = client.DeleteLocation(location.Id)
+	err = client.DeleteLocation(s.host, location.Id)
 
 	// then
 	c.Assert(err, Equals, nil)
 
-	foundLocations, _ := client.FindAllLocations()
+	foundLocations, _ := client.FindAllLocations(s.host)
 
 	c.Assert(len(foundLocations), Equals, 0)
 }
