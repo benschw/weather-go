@@ -1,4 +1,4 @@
-package openweather
+package api
 
 type Conditions struct {
 	Main    Main      `json:"main"`

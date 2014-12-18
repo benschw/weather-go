@@ -1,0 +1,4 @@
+package openweather
+
+// OpenWeather Package
+//

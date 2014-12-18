@@ -1,8 +1,9 @@
-package openweather
+package client
 
 import (
 	"fmt"
 	"github.com/benschw/opin-go/rest"
+	"github.com/benschw/weather-go/openweather/api"
 	"log"
 	"net/http"
 )
@@ -14,8 +15,8 @@ const UriString string = "http://api.openweathermap.org/data/2.5/weather?units=i
 type WeatherClient struct {
 }
 
-func (c *WeatherClient) FindForLocation(city string, state string) (Conditions, error) {
-	var cond Conditions
+func (c *WeatherClient) FindForLocation(city string, state string) (api.Conditions, error) {
+	var cond api.Conditions
 
 	url := fmt.Sprintf("%s%s,%s", UriString, city, state)
 	r, err := rest.MakeRequest("GET", url, nil)

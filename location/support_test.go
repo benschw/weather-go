@@ -2,7 +2,7 @@ package location
 
 import (
 	"fmt"
-	"github.com/benschw/weather-go/openweather"
+	wapi "github.com/benschw/weather-go/openweather/api"
 	. "gopkg.in/check.v1"
 	"log"
 	"testing"
@@ -16,19 +16,19 @@ func Test(t *testing.T) { TestingT(t) }
 type TestWeatherClient struct {
 }
 
-func (c *TestWeatherClient) FindForLocation(city string, state string) (openweather.Conditions, error) {
+func (c *TestWeatherClient) FindForLocation(city string, state string) (wapi.Conditions, error) {
 	if city == "Austin" && state == "Texas" {
-		return openweather.Conditions{
-			Main: openweather.Main{
+		return wapi.Conditions{
+			Main: wapi.Main{
 				Temperature: 75,
 			},
-			Weather: []openweather.Weather{
-				openweather.Weather{
+			Weather: []wapi.Weather{
+				wapi.Weather{
 					Description: "sunny",
 				},
 			},
 		}, nil
 	} else {
-		return openweather.Conditions{}, nil
+		return wapi.Conditions{}, nil
 	}
 }
