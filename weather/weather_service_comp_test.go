@@ -11,26 +11,26 @@ import (
 var _ = fmt.Print
 var _ = log.Print
 
-type IntTestSuite struct {
+type TestSuite struct {
 	s    *WeatherService
 	host string
 }
 
-var _ = Suite(&IntTestSuite{})
+var _ = Suite(&TestSuite{})
 
-func (s *IntTestSuite) SetUpSuite(c *C) {
+func (s *TestSuite) SetUpSuite(c *C) {
 	s.s = server
 	s.host = host
 }
-func (s *IntTestSuite) SetUpTest(c *C) {
+func (s *TestSuite) SetUpTest(c *C) {
 	s.s.MigrateDb()
 }
-func (s *IntTestSuite) TearDownTest(c *C) {
+func (s *TestSuite) TearDownTest(c *C) {
 	db, _ := s.s.getDb()
 	db.DropTable(api.Location{})
 }
 
-func (s *IntTestSuite) TestAddInt(c *C) {
+func (s *TestSuite) TestAdd(c *C) {
 	// given
 	client := &client.LocationClient{Host: s.host}
 
@@ -44,7 +44,7 @@ func (s *IntTestSuite) TestAddInt(c *C) {
 	c.Assert(created, DeepEquals, found)
 }
 
-func (s *IntTestSuite) TestFindAllInt(c *C) {
+func (s *TestSuite) TestFindAll(c *C) {
 	// given
 	client := &client.LocationClient{Host: s.host}
 
@@ -60,7 +60,7 @@ func (s *IntTestSuite) TestFindAllInt(c *C) {
 	c.Assert(foundLocations, DeepEquals, []api.Location{loc1, loc2})
 }
 
-func (s *IntTestSuite) TestSaveInt(c *C) {
+func (s *TestSuite) TestSave(c *C) {
 	// given
 	client := &client.LocationClient{Host: s.host}
 	location, err := client.AddLocation("Austin", "Texas", 78751)
@@ -75,7 +75,7 @@ func (s *IntTestSuite) TestSaveInt(c *C) {
 	c.Assert(location.State, DeepEquals, saved.State)
 }
 
-func (s *IntTestSuite) TestDeleteInt(c *C) {
+func (s *TestSuite) TestDelete(c *C) {
 	// given
 	client := &client.LocationClient{Host: s.host}
 	location, err := client.AddLocation("Austin", "Texas", 78751)

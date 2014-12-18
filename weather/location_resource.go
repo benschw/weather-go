@@ -13,16 +13,7 @@ import (
 var _ = log.Print
 
 type LocationResource struct {
-	Db         gorm.DB
-	CondClient openweather.WeatherClient
-}
-
-func (r *LocationResource) includeConditions(loc *api.Location) error {
-	cond, err := r.CondClient.FindForLocation(loc.City, loc.State)
-	if err == nil {
-		loc.Conditions = cond
-	}
-	return err
+	Db gorm.DB
 }
 
 func (r *LocationResource) Add(res http.ResponseWriter, req *http.Request) {
@@ -148,4 +139,12 @@ func (r *LocationResource) Delete(res http.ResponseWriter, req *http.Request) {
 		rest.SetInternalServerErrorResponse(res, err)
 		return
 	}
+}
+
+func (r *LocationResource) includeConditions(loc *api.Location) error {
+	cond, err := openweather.FindForLocation(loc.City, loc.State)
+	if err == nil {
+		loc.Conditions = cond
+	}
+	return err
 }
