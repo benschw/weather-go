@@ -19,8 +19,6 @@ var _ = Suite(&IntTestSuite{})
 
 func (s *IntTestSuite) TestFind(c *C) {
 	// given
-	expectedId := 4671654
-	expectedName := "Austin"
 	client := &WeatherClient{}
 
 	// when
@@ -29,6 +27,6 @@ func (s *IntTestSuite) TestFind(c *C) {
 	// then
 	c.Assert(err, Equals, nil)
 
-	c.Assert(cond.Id, Equals, expectedId)
-	c.Assert(cond.Name, Equals, expectedName)
+	c.Assert(cond.Main.Temperature > 0, Equals, true)
+	c.Assert(cond.Weather[0].Description, Not(Equals), "")
 }

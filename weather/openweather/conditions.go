@@ -1,6 +1,14 @@
 package openweather
 
 type Conditions struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	Main    Main      `json:"main"`
+	Weather []Weather `json:"weather"`
+}
+
+type Weather struct {
+	Description string `json:"description"`
+}
+
+type Main struct {
+	Temperature float32 `json:"temp"`
 }

@@ -4,12 +4,25 @@ import (
 	"fmt"
 	"github.com/benschw/opin-go/rest"
 	"github.com/benschw/weather-go/weather/api"
+	"github.com/benschw/weather-go/weather/openweather"
 	"github.com/jinzhu/gorm"
+	"log"
 	"net/http"
 )
 
+var _ = log.Print
+
 type LocationResource struct {
-	Db gorm.DB
+	Db         gorm.DB
+	CondClient openweather.WeatherClient
+}
+
+func (r *LocationResource) includeConditions(loc *api.Location) error {
+	cond, err := r.CondClient.FindForLocation(loc.City, loc.State)
+	if err == nil {
+		loc.Conditions = cond
+	}
+	return err
 }
 
 func (r *LocationResource) Add(res http.ResponseWriter, req *http.Request) {
@@ -29,6 +42,10 @@ func (r *LocationResource) Add(res http.ResponseWriter, req *http.Request) {
 
 	r.Db.Save(&location)
 
+	if err := r.includeConditions(&location); err != nil {
+		rest.SetInternalServerErrorResponse(res, err)
+		return
+	}
 	if err := rest.SetCreatedResponse(res, location, fmt.Sprintf("location/%d", location.Id)); err != nil {
 		rest.SetInternalServerErrorResponse(res, err)
 		return
@@ -39,6 +56,9 @@ func (r *LocationResource) FindAll(res http.ResponseWriter, req *http.Request) {
 	var locations []api.Location
 
 	r.Db.Find(&locations)
+	for i, _ := range locations {
+		r.includeConditions(&locations[i])
+	}
 
 	if err := rest.SetOKResponse(res, locations); err != nil {
 		rest.SetInternalServerErrorResponse(res, err)
@@ -59,6 +79,10 @@ func (r *LocationResource) Find(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if err = r.includeConditions(&location); err != nil {
+		rest.SetInternalServerErrorResponse(res, err)
+		return
+	}
 	if err := rest.SetOKResponse(res, location); err != nil {
 		rest.SetInternalServerErrorResponse(res, err)
 		return
@@ -91,6 +115,10 @@ func (r *LocationResource) Save(res http.ResponseWriter, req *http.Request) {
 
 	r.Db.Save(&location)
 
+	if err = r.includeConditions(&location); err != nil {
+		rest.SetInternalServerErrorResponse(res, err)
+		return
+	}
 	if err := rest.SetOKResponse(res, location); err != nil {
 		rest.SetInternalServerErrorResponse(res, err)
 		return
@@ -112,6 +140,10 @@ func (r *LocationResource) Delete(res http.ResponseWriter, req *http.Request) {
 
 	r.Db.Delete(&location)
 
+	if err = r.includeConditions(&location); err != nil {
+		rest.SetInternalServerErrorResponse(res, err)
+		return
+	}
 	if err := rest.SetNoContentResponse(res); err != nil {
 		rest.SetInternalServerErrorResponse(res, err)
 		return

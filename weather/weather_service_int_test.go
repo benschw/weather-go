@@ -14,11 +14,6 @@ import (
 var _ = fmt.Print
 var _ = log.Print
 
-type Config struct {
-	Bind     string
-	Database string
-}
-
 func ARandomService(dbStr string) *WeatherService {
 	host := fmt.Sprintf("localhost:%d", rando.Port())
 
@@ -41,7 +36,9 @@ type IntTestSuite struct {
 var _ = Suite(&IntTestSuite{})
 
 func (s *IntTestSuite) SetUpSuite(c *C) {
-	var cfg Config
+	var cfg struct {
+		Database string
+	}
 	config.Bind("../test.yaml", &cfg)
 
 	s.s = ARandomService(cfg.Database)
@@ -98,7 +95,7 @@ func (s *IntTestSuite) TestSave(c *C) {
 	// then
 	c.Assert(err, Equals, nil)
 
-	c.Assert(location, DeepEquals, saved)
+	c.Assert(location.State, DeepEquals, saved.State)
 }
 
 func (s *IntTestSuite) TestDelete(c *C) {

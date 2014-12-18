@@ -9,11 +9,6 @@ import (
 	"os"
 )
 
-type Config struct {
-	Bind     string
-	Database string
-}
-
 func main() {
 	// Get Arguments
 	var cfgPath string
@@ -28,7 +23,10 @@ func main() {
 	flag.Parse()
 
 	// Load Config
-	var cfg Config
+	var cfg struct {
+		Bind     string
+		Database string
+	}
 	if err := config.Bind(cfgPath, &cfg); err != nil {
 		log.Fatal(err)
 	}

@@ -9,7 +9,7 @@ import (
 
 var _ = log.Print
 
-const UriString string = "http://api.openweathermap.org/data/2.5/weather?q=" //Austin,Texas
+const UriString string = "http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" //Austin,Texas
 
 type WeatherClient struct {
 }
