@@ -1,8 +1,8 @@
 package weather
 
 import (
+	"github.com/benschw/weather-go/openweather"
 	"github.com/benschw/weather-go/weather/api"
-	"github.com/benschw/weather-go/weather/openweather"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"

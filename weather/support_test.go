@@ -2,7 +2,7 @@ package weather
 
 import (
 	"fmt"
-	"github.com/benschw/weather-go/weather/openweather"
+	"github.com/benschw/weather-go/openweather"
 	. "gopkg.in/check.v1"
 	"log"
 	"testing"
