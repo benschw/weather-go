@@ -79,7 +79,7 @@ func (s *TestSuite) TestAddBadRequest(c *C) {
 }
 
 // Client should return ErrStatusConflict when id exists
-// not supported by client so pulled impl into test
+// (not supported by client so pulled impl into test)
 func (s *TestSuite) TestAddConflict(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -121,8 +121,8 @@ func (s *TestSuite) TestFindNotFound(c *C) {
 	c.Assert(err, Equals, rest.ErrStatusNotFound)
 }
 
-// Client should return ErrStatusBadRequest when entity doesn't validate
-// not supported by client so pulled impl into test
+// Client should return ErrStatusBadRequest when id doesn't validate
+// (not supported by client so pulled impl into test)
 func (s *TestSuite) TestFindBadRequest(c *C) {
 
 	// when
@@ -181,7 +181,7 @@ func (s *TestSuite) TestSave(c *C) {
 	c.Assert(location.State, DeepEquals, saved.State)
 }
 
-// Client should return ErrStatusNotFound if trying to save something that doesn't exist
+// Client should return ErrStatusNotFound if trying to save to an id that doesn't exist
 func (s *TestSuite) TestSaveNotFound(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -197,7 +197,7 @@ func (s *TestSuite) TestSaveNotFound(c *C) {
 	c.Assert(err, Equals, rest.ErrStatusNotFound)
 }
 
-// Client should return ErrStatusBadRequest if it doesn't validate
+// Client should return ErrStatusBadRequest if entity doesn't validate
 func (s *TestSuite) TestSaveBadRequestFromEntity(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -212,8 +212,8 @@ func (s *TestSuite) TestSaveBadRequestFromEntity(c *C) {
 	c.Assert(err, Equals, rest.ErrStatusBadRequest)
 }
 
-// Client should return ErrStatusBadRequest if it doesn't validate
-// not supported by client so pulled impl into test
+// Client should return ErrStatusBadRequest if Id doesn't validate
+// (not supported by client so pulled impl into test)
 func (s *TestSuite) TestSaveBadRequestFromId(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -229,7 +229,7 @@ func (s *TestSuite) TestSaveBadRequestFromId(c *C) {
 	c.Assert(err, Equals, rest.ErrStatusBadRequest)
 }
 
-// Should Delete a location
+// Delete should Delete a location
 func (s *TestSuite) TestDelete(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -247,7 +247,7 @@ func (s *TestSuite) TestDelete(c *C) {
 	c.Assert(len(foundLocations), Equals, 0)
 }
 
-// Client should return ErrStatusNotFound if trying to save something that doesn't exist
+// Client should return ErrStatusNotFound if trying to delete an Id that doesn't exist
 func (s *TestSuite) TestDeleteNotFound(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
@@ -259,8 +259,8 @@ func (s *TestSuite) TestDeleteNotFound(c *C) {
 	c.Assert(err, Equals, rest.ErrStatusNotFound)
 }
 
-// Client should return ErrStatusBadRequest if it doesn't validate
-// not supported by client so pulled impl into test
+// Client should return ErrStatusBadRequest if Id doesn't validate
+// (not supported by client so pulled impl into test)
 func (s *TestSuite) TestDeleteBdRequesta(c *C) {
 	// when
 	url := fmt.Sprintf("%s/location/%s", s.host, "asd")
