@@ -1,12 +1,12 @@
-package weather
+package location
 
 import (
 	"fmt"
 	"github.com/benschw/opin-go/config"
 	"github.com/benschw/opin-go/rando"
 	"github.com/benschw/opin-go/rest"
-	"github.com/benschw/weather-go/weather/api"
-	"github.com/benschw/weather-go/weather/client"
+	"github.com/benschw/weather-go/location/api"
+	"github.com/benschw/weather-go/location/client"
 	. "gopkg.in/check.v1"
 	"log"
 	"net/http"
@@ -16,7 +16,7 @@ var _ = fmt.Print
 var _ = log.Print
 
 type TestSuite struct {
-	s    *WeatherService
+	s    *LocationService
 	host string
 }
 
@@ -33,7 +33,7 @@ func (s *TestSuite) SetUpSuite(c *C) {
 
 	db, _ := DbOpen(cfg.Database)
 
-	s.s = &WeatherService{
+	s.s = &LocationService{
 		Db:            db,
 		Bind:          host,
 		WeatherClient: &TestWeatherClient{},

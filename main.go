@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/benschw/opin-go/config"
-	"github.com/benschw/weather-go/weather"
+	"github.com/benschw/weather-go/location"
 	"log"
 	"os"
 )
@@ -39,7 +39,7 @@ func main() {
 	cmd := flag.Arg(0)
 
 	// Configure Server
-	s, err := weather.NewWeatherService(cfg.Bind, cfg.Database)
+	s, err := location.NewLocationService(cfg.Bind, cfg.Database)
 	if err != nil {
 		log.Fatal(err)
 	}

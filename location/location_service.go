@@ -1,8 +1,8 @@
-package weather
+package location
 
 import (
+	"github.com/benschw/weather-go/location/api"
 	"github.com/benschw/weather-go/openweather"
-	"github.com/benschw/weather-go/weather/api"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -16,14 +16,14 @@ type WeatherClient interface {
 	FindForLocation(city string, state string) (openweather.Conditions, error)
 }
 
-type WeatherService struct {
+type LocationService struct {
 	Bind          string
 	Db            gorm.DB
 	WeatherClient WeatherClient
 }
 
-func NewWeatherService(bind string, dbStr string) (*WeatherService, error) {
-	s := &WeatherService{}
+func NewLocationService(bind string, dbStr string) (*LocationService, error) {
+	s := &LocationService{}
 
 	db, err := DbOpen(dbStr)
 	if err != nil {
@@ -37,13 +37,13 @@ func NewWeatherService(bind string, dbStr string) (*WeatherService, error) {
 	return s, nil
 }
 
-func (s *WeatherService) MigrateDb() error {
+func (s *LocationService) MigrateDb() error {
 
 	s.Db.AutoMigrate(api.Location{})
 	return nil
 }
 
-func (s *WeatherService) Run() error {
+func (s *LocationService) Run() error {
 
 	// route handlers
 	resource := &LocationResource{

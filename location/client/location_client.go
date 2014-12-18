@@ -3,7 +3,7 @@ package client
 import (
 	"fmt"
 	"github.com/benschw/opin-go/rest"
-	"github.com/benschw/weather-go/weather/api"
+	"github.com/benschw/weather-go/location/api"
 	"log"
 	"net/http"
 )
