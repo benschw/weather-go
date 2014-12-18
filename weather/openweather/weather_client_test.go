@@ -18,9 +18,11 @@ type IntTestSuite struct {
 var _ = Suite(&IntTestSuite{})
 
 func (s *IntTestSuite) TestFind(c *C) {
+	// given
+	client := WeatherClient{}
 
 	// when
-	cond, err := FindForLocation("Austin", "Texas")
+	cond, err := client.FindForLocation("Austin", "Texas")
 
 	// then
 	c.Assert(err, Equals, nil)

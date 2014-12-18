@@ -39,11 +39,10 @@ func main() {
 	cmd := flag.Arg(0)
 
 	// Configure Server
-	s := &weather.WeatherService{
-		Database: cfg.Database,
-		Bind:     cfg.Bind,
+	s, err := weather.NewWeatherService(cfg.Bind, cfg.Database)
+	if err != nil {
+		log.Fatal(err)
 	}
-
 	// Run Main App
 	switch cmd {
 	case "serve":

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/benschw/opin-go/rest"
 	"github.com/benschw/weather-go/weather/api"
-	"github.com/benschw/weather-go/weather/openweather"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
@@ -13,13 +12,18 @@ import (
 var _ = log.Print
 
 type LocationResource struct {
-	Db gorm.DB
+	Db            gorm.DB
+	WeatherClient WeatherClient
 }
 
 func (r *LocationResource) Add(res http.ResponseWriter, req *http.Request) {
 	var location api.Location
 
 	if err := rest.Bind(req, &location); err != nil {
+		rest.SetBadRequestResponse(res)
+		return
+	}
+	if location.City == "" || location.State == "" {
 		rest.SetBadRequestResponse(res)
 		return
 	}
@@ -97,6 +101,10 @@ func (r *LocationResource) Save(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	location.Id = id
+	if location.City == "" || location.State == "" {
+		rest.SetBadRequestResponse(res)
+		return
+	}
 
 	var found api.Location
 	if r.Db.First(&found, id).RecordNotFound() {
@@ -142,9 +150,12 @@ func (r *LocationResource) Delete(res http.ResponseWriter, req *http.Request) {
 }
 
 func (r *LocationResource) includeConditions(loc *api.Location) error {
-	cond, err := openweather.FindForLocation(loc.City, loc.State)
+	cond, err := r.WeatherClient.FindForLocation(loc.City, loc.State)
 	if err == nil {
-		loc.Conditions = cond
+		loc.Temperature = cond.Main.Temperature
+		if len(cond.Weather) > 0 {
+			loc.Weather = cond.Weather[0].Description
+		}
 	}
 	return err
 }

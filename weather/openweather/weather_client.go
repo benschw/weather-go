@@ -11,7 +11,10 @@ var _ = log.Print
 
 const UriString string = "http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" //Austin,Texas
 
-var FindForLocation = func(city string, state string) (Conditions, error) {
+type WeatherClient struct {
+}
+
+func (c *WeatherClient) FindForLocation(city string, state string) (Conditions, error) {
 	var cond Conditions
 
 	url := fmt.Sprintf("%s%s,%s", UriString, city, state)

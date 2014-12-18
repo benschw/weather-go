@@ -2,6 +2,7 @@ package weather
 
 import (
 	"github.com/benschw/weather-go/weather/api"
+	"github.com/benschw/weather-go/weather/openweather"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -11,38 +12,44 @@ import (
 
 var _ = log.Printf
 
-type WeatherService struct {
-	Database string
-	Bind     string
+type WeatherClient interface {
+	FindForLocation(city string, state string) (openweather.Conditions, error)
 }
 
-func (s *WeatherService) getDb() (gorm.DB, error) {
-	db, err := gorm.Open("mysql", s.Database)
+type WeatherService struct {
+	Bind          string
+	Db            gorm.DB
+	WeatherClient WeatherClient
+}
+
+func NewWeatherService(bind string, dbStr string) (*WeatherService, error) {
+	s := &WeatherService{}
+
+	db, err := DbOpen(dbStr)
 	if err != nil {
-		return db, err
+		return s, err
 	}
-	db.SingularTable(true)
-	return db, nil
+
+	s.Db = db
+	s.Bind = bind
+	s.WeatherClient = &openweather.WeatherClient{}
+
+	return s, nil
 }
 
 func (s *WeatherService) MigrateDb() error {
-	db, err := s.getDb()
-	if err != nil {
-		return err
-	}
 
-	db.AutoMigrate(api.Location{})
+	s.Db.AutoMigrate(api.Location{})
 	return nil
 }
 
 func (s *WeatherService) Run() error {
-	db, err := s.getDb()
-	if err != nil {
-		return err
-	}
 
 	// route handlers
-	resource := &LocationResource{Db: db}
+	resource := &LocationResource{
+		Db:            s.Db,
+		WeatherClient: s.WeatherClient,
+	}
 
 	// Configure Routes
 	r := mux.NewRouter()
@@ -57,4 +64,13 @@ func (s *WeatherService) Run() error {
 
 	// Start HTTP Server
 	return http.ListenAndServe(s.Bind, nil)
+}
+
+func DbOpen(dbStr string) (gorm.DB, error) {
+	db, err := gorm.Open("mysql", dbStr)
+	if err != nil {
+		return db, err
+	}
+	db.SingularTable(true)
+	return db, nil
 }

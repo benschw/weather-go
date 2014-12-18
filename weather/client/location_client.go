@@ -10,7 +10,11 @@ import (
 
 var _ = log.Print
 
-var AddLocation = func(host string, city string, state string, zipcode int) (api.Location, error) {
+type LocationClient struct {
+	Host string
+}
+
+func (c *LocationClient) AddLocation(city string, state string, zipcode int) (api.Location, error) {
 	var location api.Location
 
 	newLocation := api.Location{
@@ -19,7 +23,7 @@ var AddLocation = func(host string, city string, state string, zipcode int) (api
 		Zipcode: zipcode,
 	}
 
-	url := fmt.Sprintf("%s/location", host)
+	url := fmt.Sprintf("%s/location", c.Host)
 	r, err := rest.MakeRequest("POST", url, newLocation)
 	if err != nil {
 		return location, err
@@ -28,10 +32,10 @@ var AddLocation = func(host string, city string, state string, zipcode int) (api
 	return location, err
 }
 
-var FindAllLocations = func(host string) ([]api.Location, error) {
+func (c *LocationClient) FindAllLocations() ([]api.Location, error) {
 	var locations []api.Location
 
-	url := fmt.Sprintf("%s/location", host)
+	url := fmt.Sprintf("%s/location", c.Host)
 	r, err := rest.MakeRequest("GET", url, nil)
 	if err != nil {
 		return locations, err
@@ -40,10 +44,10 @@ var FindAllLocations = func(host string) ([]api.Location, error) {
 	return locations, err
 }
 
-var FindLocation = func(host string, id int) (api.Location, error) {
+func (c *LocationClient) FindLocation(id int) (api.Location, error) {
 	var location api.Location
 
-	url := fmt.Sprintf("%s/location/%d", host, id)
+	url := fmt.Sprintf("%s/location/%d", c.Host, id)
 	r, err := rest.MakeRequest("GET", url, nil)
 	if err != nil {
 		return location, err
@@ -52,10 +56,10 @@ var FindLocation = func(host string, id int) (api.Location, error) {
 	return location, err
 }
 
-var SaveLocation = func(host string, toSave api.Location) (api.Location, error) {
+func (c *LocationClient) SaveLocation(toSave api.Location) (api.Location, error) {
 	var location api.Location
 
-	url := fmt.Sprintf("%s/location/%d", host, toSave.Id)
+	url := fmt.Sprintf("%s/location/%d", c.Host, toSave.Id)
 	r, err := rest.MakeRequest("PUT", url, toSave)
 	if err != nil {
 		return location, err
@@ -64,8 +68,8 @@ var SaveLocation = func(host string, toSave api.Location) (api.Location, error) 
 	return location, err
 }
 
-var DeleteLocation = func(host string, id int) error {
-	url := fmt.Sprintf("%s/location/%d", host, id)
+func (c *LocationClient) DeleteLocation(id int) error {
+	url := fmt.Sprintf("%s/location/%d", c.Host, id)
 	r, err := rest.MakeRequest("DELETE", url, nil)
 	if err != nil {
 		return err
