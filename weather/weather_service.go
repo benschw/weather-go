@@ -13,12 +13,24 @@ import (
 var _ = log.Printf
 
 type WeatherService struct {
-	Database string
-	Bind     string
+	Db   gorm.DB
+	Bind string
 }
 
-func (s *WeatherService) getDb() (gorm.DB, error) {
-	db, err := gorm.Open("mysql", s.Database)
+func NewWeatherService(dbStr string, bind string) *WeatherService {
+	db, err := dbOpen(dbStr)
+	if err != nil {
+		panic(err)
+	}
+
+	return &WeatherService{
+		Db:   db,
+		Bind: bind,
+	}
+}
+
+func dbOpen(dbStr string) (gorm.DB, error) {
+	db, err := gorm.Open("mysql", dbStr)
 	if err != nil {
 		return db, err
 	}
@@ -26,26 +38,18 @@ func (s *WeatherService) getDb() (gorm.DB, error) {
 	return db, nil
 }
 
-func (s *WeatherService) Migrate() error {
-	db, err := s.getDb()
-	if err != nil {
-		return err
-	}
+func (s *WeatherService) MigrateDb() error {
 
-	db.AutoMigrate(api.Location{})
+	s.Db.AutoMigrate(api.Location{})
 	return nil
 }
 
 func (s *WeatherService) Run() error {
-	db, err := s.getDb()
-	if err != nil {
-		return err
-	}
-
 	c := openweather.WeatherClient{}
+
 	// route handlers
 	resource := &LocationResource{
-		Db:         db,
+		Db:         s.Db,
 		CondClient: c,
 	}
 

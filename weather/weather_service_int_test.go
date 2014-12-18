@@ -17,10 +17,7 @@ var _ = log.Print
 func ARandomService(dbStr string) *WeatherService {
 	host := fmt.Sprintf("localhost:%d", rando.Port())
 
-	s := &WeatherService{
-		Database: dbStr,
-		Bind:     host,
-	}
+	s := NewWeatherService(dbStr, host)
 	go s.Run()
 
 	return s
@@ -46,11 +43,10 @@ func (s *IntTestSuite) SetUpSuite(c *C) {
 
 }
 func (s *IntTestSuite) SetUpTest(c *C) {
-	s.s.Migrate()
+	s.s.MigrateDb()
 }
 func (s *IntTestSuite) TearDownTest(c *C) {
-	db, _ := s.s.getDb()
-	db.DropTable(api.Location{})
+	s.s.Db.DropTable(api.Location{})
 }
 
 func (s *IntTestSuite) TestAdd(c *C) {

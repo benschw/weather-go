@@ -39,10 +39,7 @@ func main() {
 	cmd := flag.Arg(0)
 
 	// Configure Server
-	s := &weather.WeatherService{
-		Database: cfg.Database,
-		Bind:     cfg.Bind,
-	}
+	s := weather.NewWeatherService(cfg.Database, cfg.Bind)
 
 	// Run Main App
 	switch cmd {
@@ -55,7 +52,7 @@ func main() {
 	case "migrate-db":
 
 		// Start Server
-		if err := s.Migrate(); err != nil {
+		if err := s.MigrateDb(); err != nil {
 			log.Fatal(err)
 		}
 	default:
