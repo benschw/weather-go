@@ -39,7 +39,10 @@ func main() {
 	cmd := flag.Arg(0)
 
 	// Configure Server
-	s := weather.NewWeatherService(cfg.Database, cfg.Bind)
+	s := &weather.WeatherService{
+		Database: cfg.Database,
+		Bind:     cfg.Bind,
+	}
 
 	// Run Main App
 	switch cmd {
