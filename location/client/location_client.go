@@ -14,13 +14,12 @@ type LocationClient struct {
 	Host string
 }
 
-func (c *LocationClient) AddLocation(city string, state string, zipcode int) (api.Location, error) {
+func (c *LocationClient) AddLocation(city string, state string) (api.Location, error) {
 	var location api.Location
 
 	newLocation := api.Location{
-		City:    city,
-		State:   state,
-		Zipcode: zipcode,
+		City:  city,
+		State: state,
 	}
 
 	url := fmt.Sprintf("%s/location", c.Host)

@@ -57,7 +57,7 @@ func (s *TestSuite) TestAdd(c *C) {
 	locClient := client.LocationClient{Host: s.host}
 
 	// when
-	created, err := locClient.AddLocation("Austin", "Texas", 78751)
+	created, err := locClient.AddLocation("Austin", "Texas")
 
 	// then
 	c.Assert(err, Equals, nil)
@@ -72,7 +72,7 @@ func (s *TestSuite) TestAddBadRequest(c *C) {
 	locClient := client.LocationClient{Host: s.host}
 
 	// when
-	_, err := locClient.AddLocation("", "Texas", 78751)
+	_, err := locClient.AddLocation("", "Texas")
 
 	// then
 	c.Assert(err, Equals, rest.ErrStatusBadRequest)
@@ -83,7 +83,7 @@ func (s *TestSuite) TestAddBadRequest(c *C) {
 func (s *TestSuite) TestAddConflict(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
-	created, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	created, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	url := fmt.Sprintf("%s/location", s.host)
@@ -98,7 +98,7 @@ func (s *TestSuite) TestAddConflict(c *C) {
 func (s *TestSuite) TestFind(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
-	created, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	created, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	found, err := locClient.FindLocation(created.Id)
@@ -139,8 +139,8 @@ func (s *TestSuite) TestFindAll(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	loc1, err := locClient.AddLocation("Austin", "Texas", 78751)
-	loc2, err := locClient.AddLocation("Williamsburg", "Virginia", 23188)
+	loc1, err := locClient.AddLocation("Austin", "Texas")
+	loc2, err := locClient.AddLocation("Williamsburg", "Virginia")
 	// when
 
 	foundLocations, err := locClient.FindAllLocations()
@@ -170,7 +170,7 @@ func (s *TestSuite) TestSave(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	location, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	location, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	saved, err := locClient.SaveLocation(location)
@@ -186,7 +186,7 @@ func (s *TestSuite) TestSaveNotFound(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	location, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	location, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	location.Id = location.Id + 1
@@ -202,7 +202,7 @@ func (s *TestSuite) TestSaveBadRequestFromEntity(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	location, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	location, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	location.State = ""
@@ -218,7 +218,7 @@ func (s *TestSuite) TestSaveBadRequestFromId(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	location, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	location, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	url := fmt.Sprintf("%s/location/%s", s.host, "asd")
@@ -234,7 +234,7 @@ func (s *TestSuite) TestDelete(c *C) {
 	// given
 	locClient := client.LocationClient{Host: s.host}
 
-	location, _ := locClient.AddLocation("Austin", "Texas", 78751)
+	location, _ := locClient.AddLocation("Austin", "Texas")
 
 	// when
 	err := locClient.DeleteLocation(location.Id)
