@@ -36,7 +36,7 @@ func (s *TestSuite) SetUpSuite(c *C) {
 	s.s = &LocationService{
 		Db:            db,
 		Bind:          host,
-		WeatherClient: &TestWeatherClient{},
+		WeatherClient: &WeatherClientStub{},
 	}
 	go s.s.Run()
 

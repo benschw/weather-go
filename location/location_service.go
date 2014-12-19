@@ -2,7 +2,6 @@ package location
 
 import (
 	"github.com/benschw/weather-go/location/api"
-	wapi "github.com/benschw/weather-go/openweather/api"
 	wclient "github.com/benschw/weather-go/openweather/client"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -12,10 +11,6 @@ import (
 )
 
 var _ = log.Printf
-
-type WeatherClient interface {
-	FindForLocation(city string, state string) (wapi.Conditions, error)
-}
 
 type LocationService struct {
 	Bind          string

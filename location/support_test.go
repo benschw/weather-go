@@ -13,10 +13,10 @@ var _ = log.Print
 
 func Test(t *testing.T) { TestingT(t) }
 
-type TestWeatherClient struct {
+type WeatherClientStub struct {
 }
 
-func (c *TestWeatherClient) FindForLocation(city string, state string) (wapi.Conditions, error) {
+func (c *WeatherClientStub) FindForLocation(city string, state string) (wapi.Conditions, error) {
 	if city == "Austin" && state == "Texas" {
 		return wapi.Conditions{
 			Main: wapi.Main{
