@@ -35,7 +35,7 @@ func NewLocationService(bind string, dbStr string) (*LocationService, error) {
 
 func (s *LocationService) MigrateDb() error {
 
-	s.Db.AutoMigrate(api.Location{})
+	s.Db.AutoMigrate(&api.Location{})
 	return nil
 }
 
