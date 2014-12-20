@@ -6,7 +6,7 @@ go:
   - tip
 
 services:
-  - rabbitmq
+  - mysql
 
 before_script:
   - mysql -e 'create database LocationTest;'
