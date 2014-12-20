@@ -1,0 +1,17 @@
+sudo: false
+language: go
+
+go:
+  - 1.3
+  - tip
+
+services:
+  - rabbitmq
+
+before_script:
+  - mysql -e 'create database LocationTest;'
+
+script: 
+	- go get 
+	- go get gopkg.in/check.v1 
+	- go test ./...
