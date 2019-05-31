@@ -4,17 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"github.com/benschw/weather-go/location"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Unable to load .env file")
-	}
-
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [arguments] <command> \n", os.Args[0])
 		flag.PrintDefaults()
@@ -24,6 +18,8 @@ func main() {
 
 	bindAddress := os.Getenv("bind")
 	databaseDsn := os.Getenv("database")
+
+	log.Printf("Start's with bindAddress:%s dsn:%s", bindAddress, databaseDsn)
 
 	// Configure Server
 	s, err := location.NewLocationService(bindAddress, databaseDsn)

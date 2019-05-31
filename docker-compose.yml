@@ -1,14 +1,21 @@
 version: '3'
 services:
-  api:
-    build: .
-    ports:
-    - "8080:8080"
-    environment:
-      database: "root:root@tcp(mysql:3306)/Location?charset=utf8&parseTime=True"
-      bind: "0.0.0.0:8181"
-
   mysql:
     image: "mysql:5.7"
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
+    env_file:
+      - '.env'
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 1s
+      retries: 20
+
+  weather:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - '.env'
+    depends_on:
+      - mysql
