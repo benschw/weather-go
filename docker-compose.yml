@@ -4,10 +4,6 @@ services:
     image: "mysql:5.7"
     env_file:
       - '.env'
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 1s
-      retries: 20
 
   weather:
     build: .
