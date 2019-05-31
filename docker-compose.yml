@@ -1,0 +1,14 @@
+version: '3'
+services:
+  api:
+    build: .
+    ports:
+    - "8080:8080"
+    environment:
+      database: "root:root@tcp(mysql:3306)/Location?charset=utf8&parseTime=True"
+      bind: "0.0.0.0:8181"
+
+  mysql:
+    image: "mysql:5.7"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"

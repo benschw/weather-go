@@ -3,64 +3,45 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/benschw/opin-go/config"
 	"github.com/benschw/weather-go/location"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
 func main() {
-	// Get Arguments
-	var cfgPath string
-
-	flag.StringVar(&cfgPath, "config", "./config.yaml", "Path to Config File")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Unable to load .env file")
+	}
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [arguments] <command> \n", os.Args[0])
 		flag.PrintDefaults()
 	}
-
 	flag.Parse()
-
-	// Load Config
-	var cfg struct {
-		Bind     string
-		Database string
-	}
-	if err := config.Bind(cfgPath, &cfg); err != nil {
-		log.Fatal(err)
-	}
-
-	// pull desired command/operation from args
-	if flag.NArg() == 0 {
-		flag.Usage()
-		log.Fatal("Command argument required")
-	}
 	cmd := flag.Arg(0)
 
+	bindAddress := os.Getenv("bind")
+	databaseDsn := os.Getenv("database")
+
 	// Configure Server
-	s, err := location.NewLocationService(cfg.Bind, cfg.Database)
+	s, err := location.NewLocationService(bindAddress, databaseDsn)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Run Main App
 	switch cmd {
-	case "serve":
-
-		// Start Server
-		if err := s.Run(); err != nil {
-			log.Fatal(err)
-		}
+	case "help":
+		flag.Usage()
 	case "migrate-db":
-
-		// Start Server
 		if err := s.MigrateDb(); err != nil {
 			log.Fatal(err)
 		}
 	default:
-		flag.Usage()
-		log.Fatalf("Unknown Command: %s", cmd)
+		if err := s.Run(); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 }

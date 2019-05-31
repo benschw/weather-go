@@ -1,1 +1,0 @@
-database: "root:@tcp(localhost:3306)/LocationTest?charset=utf8&parseTime=True"
