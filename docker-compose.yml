@@ -4,8 +4,6 @@ services:
     image: "mysql:5.7"
     env_file:
       - '.env'
-    volumes:
-      - ./db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 1s
@@ -14,8 +12,13 @@ services:
   weather:
     build: .
     ports:
-      - "8080:8080"
+      - "8282:8080"
     env_file:
       - '.env'
     depends_on:
       - mysql
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 1s
+        max_attempts: 20
