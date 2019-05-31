@@ -2,7 +2,6 @@ package location
 
 import (
 	"fmt"
-	"github.com/benschw/opin-go/config"
 	"github.com/benschw/opin-go/rando"
 	"github.com/benschw/opin-go/rest"
 	"github.com/benschw/weather-go/location/api"
@@ -10,6 +9,7 @@ import (
 	. "gopkg.in/check.v1"
 	"log"
 	"net/http"
+	"os"
 )
 
 var _ = fmt.Print
@@ -23,15 +23,11 @@ type TestSuite struct {
 var _ = Suite(&TestSuite{})
 
 func (s *TestSuite) SetUpSuite(c *C) {
-	var cfg struct {
-		Database string
-	}
-
-	var _ = config.Bind("../test.yaml", &cfg)
+	databaseDsn := os.Getenv("database")
 
 	host := fmt.Sprintf("localhost:%d", rando.Port())
 
-	db, _ := DbOpen(cfg.Database)
+	db, _ := DbOpen(databaseDsn)
 
 	s.s = &LocationService{
 		Db:            db,

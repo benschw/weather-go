@@ -14,7 +14,7 @@ var _ = log.Printf
 
 type LocationService struct {
 	Bind          string
-	Db            gorm.DB
+	Db            *gorm.DB
 	WeatherClient WeatherClient
 }
 
@@ -43,7 +43,7 @@ func (s *LocationService) Run() error {
 
 	// route handlers
 	resource := &LocationResource{
-		Db:            s.Db,
+		Db:            *s.Db,
 		WeatherClient: s.WeatherClient,
 	}
 
@@ -62,7 +62,7 @@ func (s *LocationService) Run() error {
 	return http.ListenAndServe(s.Bind, nil)
 }
 
-func DbOpen(dbStr string) (gorm.DB, error) {
+func DbOpen(dbStr string) (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", dbStr)
 	if err != nil {
 		return db, err

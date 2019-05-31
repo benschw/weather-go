@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    image: "mysql:5.7"
+    env_file:
+      - '.env'
+
+  weather:
+    build: .
+    ports:
+      - "8282:8080"
+    env_file:
+      - '.env'
+    depends_on:
+      - mysql
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 1s
+        max_attempts: 20
