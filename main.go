@@ -43,6 +43,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	// Run Main App
 	switch cmd {
 	case "serve":
